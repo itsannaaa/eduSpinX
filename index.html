@@ -28,10 +28,9 @@
 }
 
 .rocket-active {
-    display: inline-block;
-    animation: vibrate 0.3s linear infinite;
-    font-size: 40px !important; /* Membesar sedikit semasa bergetar */
-    transition: 0.3s;
+    display: inline-block !important; /* Pastikan dia boleh bergerak */
+    animation: vibrate 0.3s linear infinite !important;
+    font-size: 40px !important;
 }
         </style>
 </head>
@@ -75,8 +74,8 @@
             🔄
         </button>
         <button id="roketBtn" onclick="updateManual()" style="background: none; border: none; cursor: pointer; font-size: 30px; transition: 0.3s;">
-    🚀
-</button>
+            🚀
+        </button>
     </div>
 </div>
 
@@ -102,7 +101,7 @@
     // FUNGSI TARIK DATA DENGAN AUDIO & GETARAN
     async function tarikDataCloud() {
         const btnRoket = document.getElementById("roketBtn");
-        const whooshAudio = document.getElementById("whooshSound");
+        const whoosh_Audio = document.getElementById("whoosh_Sound");
 
         try {
             // Main bunyi roket & mula getar
