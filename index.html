@@ -8,7 +8,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Paksa semua elemen ke tengah */
         body { 
             font-family: 'Poppins', sans-serif; 
             background: #f4f7f6; 
@@ -21,7 +20,6 @@
             box-sizing: border-box;
         }
 
-        /* Container utama supaya semua elemen sama lebar */
         .main-container {
             width: 100%;
             max-width: 400px;
@@ -31,17 +29,16 @@
             text-align: center;
         }
 
-        /* Wrapper Roda - Saiz diselaraskan dengan canvas */
+        /* Wrapper Roda - Saiz dikecilkan ke 280px */
         #wheel-wrapper { 
             position: relative; 
-            width: 320px; 
-            height: 320px; 
+            width: 280px; 
+            height: 280px; 
             margin: 20px 0;
             display: flex;
             justify-content: center;
         }
 
-        /* Jarum - Pastikan betul-betul di tengah wrapper */
         #pointer { 
             position: absolute; 
             top: -10px; 
@@ -49,25 +46,26 @@
             transform: translateX(-50%); 
             width: 0; 
             height: 0; 
-            border-left: 20px solid transparent; 
-            border-right: 20px solid transparent; 
-            border-top: 40px solid #000000; 
+            border-left: 15px solid transparent; 
+            border-right: 15px solid transparent; 
+            border-top: 35px solid #000000; 
             z-index: 100; 
         }
 
-        /* Canvas - Saiz display mesti sama dengan wrapper */
+        /* Canvas diselaraskan dengan wrapper 280px */
         canvas { 
-            width: 400px !important; 
-            height: 400px !important; 
+            width: 280px !important; 
+            height: 280px !important; 
             border-radius: 50%; 
-            border: 10px solid #333; 
+            border: 8px solid #333; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
             background: white;
         }
 
+        /* Ditambah margin-top & margin-bottom untuk jarak */
         #spinBtn { 
-            padding: 12px 40px 0; 
-            font-size: 18px; 
+            padding: 15px 0; 
+            font-size: 20px; 
             font-weight: bold; 
             cursor: pointer; 
             background: #27ae60; 
@@ -76,7 +74,7 @@
             border-radius: 50px; 
             transition: 0.3s; 
             width: 100%; 
-            margin: 10px 0 20px 0;
+            margin: 30px 0 30px 0; /* Jarak atas bawah ditambah */
             box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4); 
         }
 
