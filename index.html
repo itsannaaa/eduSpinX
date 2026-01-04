@@ -44,7 +44,7 @@
     <source src="win.mp3" type="audio/mpeg">
 </audio>
 <audio id="whooshSound" preload="auto">
-    <source src="whoosh.mp3" type="audio/mpeg">
+    <source src="whoosh_.mp3" type="audio/mpeg">
 </audio>
 
    <body style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #f4f7f6;">
@@ -106,9 +106,9 @@
 
         try {
             // Main bunyi roket & mula getar
-            if (whooshAudio) {
-                whooshAudio.currentTime = 0;
-                whooshAudio.play().catch(e => console.log("Audio block"));
+            if (whoosh_Audio) {
+                whoosh_Audio.currentTime = 0;
+                whoosh_Audio.play().catch(e => console.log("Audio block"));
             }
             btnRoket.classList.add("rocket-active");
 
@@ -215,7 +215,7 @@
         // Load audio siap-siap
         document.getElementById("spinSound").load();
         document.getElementById("winSound").load();
-        document.getElementById("whooshSound").load();
+        document.getElementById("whoosh_Sound").load();
         drawWheel(); 
     };
 </script>
