@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eduX</title>
+    <title>eduSpinX</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
@@ -37,9 +37,15 @@
 </head>
 <body>
 
-<audio id="spinSound" src="spin.mp3" preload="auto"></audio>
-<audio id="winSound" src="win.mp3" preload="auto"></audio>
-<audio id="whooshSound" src="whoosh.mp3" preload="auto"></audio>
+<audio id="spinSound" preload="auto">
+    <source src="spin.mp3" type="audio/mpeg">
+</audio>
+<audio id="winSound" preload="auto">
+    <source src="win.mp3" type="audio/mpeg">
+</audio>
+<audio id="whooshSound" preload="auto">
+    <source src="whoosh.mp3" type="audio/mpeg">
+</audio>
 
    <body style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #f4f7f6;">
 
@@ -84,126 +90,134 @@
         // ===========================
 
         const canvas = document.getElementById("wheel");
-        const ctx = canvas.getContext("2d");
-        const spinAudio = document.getElementById("spinSound");
-        const winAudio = document.getElementById("winSound");
-        const txtArea = document.getElementById("listTajuk");
-        const statusTxt = document.getElementById("cloudStatus");
-        const btnSpin = document.getElementById("spinBtn");
+    const ctx = canvas.getContext("2d");
+    const txtArea = document.getElementById("listTajuk");
+    const btnSpin = document.getElementById("spinBtn");
 
-        let tajuk = [];
-        let colors = ["#1abc9c", "#3498db", "#9b59b6", "#f1c40f", "#e67e22", "#e74c3c", "#2ecc71", "#d35400"];
-        let currentRotation = 0;
-        let isSpinning = false;
+    let tajuk = [];
+    let colors = ["#1abc9c", "#3498db", "#9b59b6", "#f1c40f", "#e67e22", "#e74c3c", "#2ecc71", "#d35400"];
+    let currentRotation = 0;
+    let isSpinning = false;
 
-       // FUNGSI BARU: Hanya panggil Cloud bila butang ditekan
-      async function tarikDataCloud() {
-    const btnRoket = document.getElementById("roketBtn");
-    const whooshAudio = document.getElementById("whooshSound"); // Ambil audio whoosh
+    // FUNGSI TARIK DATA DENGAN AUDIO & GETARAN
+    async function tarikDataCloud() {
+        const btnRoket = document.getElementById("roketBtn");
+        const whooshAudio = document.getElementById("whooshSound");
 
-    try {
-        if (whooshAudio) whooshAudio.play(); // Mainkan bunyi roket berlepas
-        btnRoket.classList.add("rocket-active");
+        try {
+            // Main bunyi roket & mula getar
+            if (whooshAudio) {
+                whooshAudio.currentTime = 0;
+                whooshAudio.play().catch(e => console.log("Audio block"));
+            }
+            btnRoket.classList.add("rocket-active");
 
-        const res = await fetch(CLOUD_URL);
-        const data = await res.json();
-        
-        if(data && data.length > 0) {
-            tajuk = data;
-            txtArea.value = tajuk.join(", ");
-            drawWheel();
-        }
-    } catch (e) { 
-        console.log("Gagal tarik data");
-    } finally {
-        setTimeout(() => {
-            btnRoket.classList.remove("rocket-active");
-        }, 500);
-    }
-}
-        function updateManual() {
-            // Jika kotak teks kosong, dia akan cuba tarik dari Cloud dulu
-            if (txtArea.value.trim() === "") {
-                tarikDataCloud();
-            } else {
-                // Jika cikgu dah taip/edit, dia ambil apa yang ada dalam kotak
-                tajuk = txtArea.value.split(",").map(s => s.trim()).filter(s => s !== "");
+            const res = await fetch(CLOUD_URL);
+            const data = await res.json();
+            
+            if(data && data.length > 0) {
+                tajuk = data;
+                txtArea.value = tajuk.join(", ");
                 drawWheel();
             }
-        }
-
-        function resetRoda() {
-    // 1. Kosongkan senarai tajuk
-    tajuk = [];
-    // 2. Kosongkan kotak teks
-    txtArea.value = "";
-    // 3. Lukis semula roda (akan jadi kosong)
-    drawWheel();
-    // 4. Set status permainan ke asal
-    isGameStarted = false;
-    
-    // Optional: Bunyi sikit atau notifikasi ringkas
-    console.log("Roda telah direset.");
-}
-        function drawWheel() {
-            const size = tajuk.length;
-            if (size === 0) {
-                ctx.clearRect(0, 0, 500, 500);
-                return;
-            }
-            const arc = (2 * Math.PI) / size;
-            ctx.clearRect(0, 0, 500, 500);
-            tajuk.forEach((text, i) => {
-                const angle = i * arc;
-                ctx.fillStyle = colors[i % colors.length];
-                ctx.beginPath(); ctx.moveTo(250, 250);
-                ctx.arc(250, 250, 240, angle, angle + arc);
-                ctx.fill(); ctx.strokeStyle = "white"; ctx.lineWidth = 2; ctx.stroke();
-                ctx.save(); ctx.translate(250, 250); ctx.rotate(angle + arc / 2);
-                ctx.fillStyle = "white"; ctx.font = "bold 18px Poppins"; ctx.textAlign = "right";
-                ctx.fillText(text, 220, 10); ctx.restore();
-            });
-        }
-
-        function spinWheel() {
-            if (isSpinning || tajuk.length === 0) return;
-            isSpinning = true; btnSpin.disabled = true;
-            spinAudio.currentTime = 0; spinAudio.loop = true; spinAudio.play();
-            const rotationDegree = (5 + Math.random() * 5) * 360 + Math.random() * 360;
-            currentRotation += rotationDegree;
-            canvas.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)";
-            canvas.style.transform = `rotate(${currentRotation}deg)`;
+        } catch (e) { 
+            console.log("Gagal tarik data");
+        } finally {
+            // Berhenti getar selepas 0.5 saat
             setTimeout(() => {
-                isSpinning = false; btnSpin.disabled = false;
-                spinAudio.pause(); winAudio.play();
-                showResult();
-            }, 4000);
+                btnRoket.classList.remove("rocket-active");
+            }, 500);
+        }
+    }
+
+    function updateManual() {
+        if (txtArea.value.trim() === "") {
+            tarikDataCloud();
+        } else {
+            tajuk = txtArea.value.split(",").map(s => s.trim()).filter(s => s !== "");
+            drawWheel();
+        }
+    }
+
+    function resetRoda() {
+        tajuk = [];
+        txtArea.value = "";
+        drawWheel();
+    }
+
+    function drawWheel() {
+        const size = tajuk.length;
+        if (size === 0) {
+            ctx.clearRect(0, 0, 500, 500);
+            return;
+        }
+        const arc = (2 * Math.PI) / size;
+        ctx.clearRect(0, 0, 500, 500);
+        tajuk.forEach((text, i) => {
+            const angle = i * arc;
+            ctx.fillStyle = colors[i % colors.length];
+            ctx.beginPath(); ctx.moveTo(250, 250);
+            ctx.arc(250, 250, 240, angle, angle + arc);
+            ctx.fill(); ctx.strokeStyle = "white"; ctx.lineWidth = 2; ctx.stroke();
+            ctx.save(); ctx.translate(250, 250); ctx.rotate(angle + arc / 2);
+            ctx.fillStyle = "white"; ctx.font = "bold 18px Poppins"; ctx.textAlign = "right";
+            ctx.fillText(text, 220, 10); ctx.restore();
+        });
+    }
+
+    function spinWheel() {
+        if (isSpinning || tajuk.length === 0) return;
+        isSpinning = true; btnSpin.disabled = true;
+        
+        const spinAudio = document.getElementById("spinSound");
+        if (spinAudio) {
+            spinAudio.currentTime = 0;
+            spinAudio.play();
         }
 
-        function showResult() {
-            const size = tajuk.length;
-            const arc = 360 / size;
-            const index = Math.floor(((360 - (currentRotation % 360) + 270) % 360) / arc);
-            const pemenang = tajuk[index];
+        const rotationDegree = (5 + Math.random() * 5) * 360 + Math.random() * 360;
+        currentRotation += rotationDegree;
+        canvas.style.transition = "transform 4s cubic-bezier(0.15, 0, 0.15, 1)";
+        canvas.style.transform = `rotate(${currentRotation}deg)`;
 
-            Swal.fire({
-                title: 'TAHNIAH!',
-                html: `Kumpulan anda mendapat:<br><b style="font-size:26px; color:#27ae60;">${pemenang}</b><br><br><div id="qrcode" style="display:flex; justify-content:center;"></div>`,
-                confirmButtonText: 'OK',
-                didOpen: () => { new QRCode(document.getElementById("qrcode"), { text: LINK_GFORM, width: 160, height: 160 }); }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    tajuk.splice(index, 1);
-                    txtArea.value = tajuk.join(", ");
-                    drawWheel();
-                }
-            });
-        }
+        setTimeout(() => {
+            isSpinning = false; btnSpin.disabled = false;
+            if (spinAudio) spinAudio.pause();
+            
+            const winAudio = document.getElementById("winSound");
+            if (winAudio) winAudio.play();
+            
+            showResult();
+        }, 4000);
+    }
 
-        // KITA BUANG SETINTERVAL. Jadi roda akan sentiasa kosong bila buka.
-        window.onload = () => { 
-            drawWheel(); 
-        };
-    </script>
+    function showResult() {
+        const size = tajuk.length;
+        const arc = 360 / size;
+        const index = Math.floor(((360 - (currentRotation % 360) + 270) % 360) / arc);
+        const pemenang = tajuk[index];
+
+        Swal.fire({
+            title: 'TAHNIAH!',
+            html: `Kumpulan anda mendapat:<br><b style="font-size:26px; color:#27ae60;">${pemenang}</b><br><br><div id="qrcode" style="display:flex; justify-content:center;"></div>`,
+            confirmButtonText: 'OK & PADAM NAMA',
+            didOpen: () => { new QRCode(document.getElementById("qrcode"), { text: LINK_GFORM, width: 160, height: 160 }); }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                tajuk.splice(index, 1);
+                txtArea.value = tajuk.join(", ");
+                drawWheel();
+            }
+        });
+    }
+
+    window.onload = () => { 
+        // Load audio siap-siap
+        document.getElementById("spinSound").load();
+        document.getElementById("winSound").load();
+        document.getElementById("whooshSound").load();
+        drawWheel(); 
+    };
+</script>
 </body>
 </html>
