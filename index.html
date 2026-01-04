@@ -16,79 +16,65 @@
         #spinBtn:hover { background: #219150; transform: scale(1.05); }
         #spinBtn:disabled { background: #bdc3c7; }
         .controls { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
-        textarea { width: 92%; height: 60px; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-family: inherit; resize: none; margin-bottom: 5px; }
+        textarea { width: 92%; height: 60px; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-family: inherit; resize: none; margin-bottom: 5px; text-align: center; }
 
-       @keyframes vibrate {
-    0% { transform: translate(0); }
-    20% { transform: translate(-2px, 2px); }
-    40% { transform: translate(-2px, -2px); }
-    60% { transform: translate(2px, 2px); }
-    80% { transform: translate(2px, -2px); }
-    100% { transform: translate(0); }
-}
+        @keyframes vibrate {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
 
-.rocket-active {
-    display: inline-block !important; /* Pastikan dia boleh bergerak */
-    animation: vibrate 0.3s linear infinite !important;
-    font-size: 40px !important;
-}
-        </style>
+        .rocket-active {
+            display: inline-block !important;
+            animation: vibrate 0.3s linear infinite !important;
+            font-size: 40px !important;
+        }
+    </style>
 </head>
 <body>
 
-<audio id="spinSound" preload="auto">
-    <source src="spin.mp3" type="audio/mpeg">
-</audio>
-<audio id="winSound" preload="auto">
-    <source src="win.mp3" type="audio/mpeg">
-</audio>
-<audio id="whooshSound" preload="auto">
-    <source src="whoosh_.mp3" type="audio/mpeg">
-</audio>
+<audio id="spinSound" preload="auto"><source src="spin.mp3" type="audio/mpeg"></audio>
+<audio id="winSound" preload="auto"><source src="win.mp3" type="audio/mpeg"></audio>
+<audio id="whooshSound" preload="auto"><source src="whoosh_.mp3" type="audio/mpeg"></audio>
 
-   <body style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #f4f7f6;">
+<div style="width: 100%; text-align: center; margin-top: 30px; margin-bottom: 40px;">
+    <h1 style="margin: 0; font-size: 35px; color: #2c3e50; letter-spacing: 1px;">
+        🎡 <span style="color: #27ae60;">edu</span>SpinX
+    </h1>
+    <p style="margin: 10px 0 0 0; font-size: 16px; color: #819091; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
+        🚀 Revolusi Pembelajaran Digital
+    </p>
+</div>
 
-    <div style="width: 100%; text-align: center; margin-top: 30px; margin-bottom: 40px;">
-        <h1 style="margin: 0; font-size: 35px; color: #2c3e50; letter-spacing: 1px;">
-            🎡 <span style="color: #27ae60;">edu</span>SpinX
-        </h1>
-        <p style="margin: 10px 0 0 0; font-size: 16px; color: #819091; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
-            🚀 Revolusi Pembelajaran Digital
-        </p>
-    </div>
+<div id="wheel-wrapper">
+    <div id="pointer"></div>
+    <canvas id="wheel" width="500" height="500"></canvas>
+</div>
 
-    <div id="wheel-wrapper" style="position: relative; display: flex; justify-content: center;">
-        <div id="pointer"></div>
-        <canvas id="wheel" width="500" height="500"></canvas>
-    </div>
+<button id="spinBtn" onclick="spinWheel()">PUTAR RODA</button>
 
-    <button id="spinBtn" onclick="spinWheel()">PUTAR RODA</button>
+<div class="controls">
+    <p style="font-size: 13px; font-weight: bold; margin-bottom: 8px;">TOPIK</p>
+    <textarea id="listTajuk" placeholder="Contoh: Sejarah, Bm, Math"></textarea>
 
-    <div class="controls">
-        <p style="font-size: 13px; font-weight: bold; margin-bottom: 8px;">TOPIK</p>
-        <textarea id="listTajuk" placeholder="Contoh: Sejarah, Bm, Math"></textarea>
-   
-        <div style="width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; margin-top: 20px;">    
-    <div style="display: flex; gap: 30px; margin-top: 10px;">
+    <div style="display: flex; justify-content: center; gap: 30px; margin-top: 10px;">
         <button onclick="resetRoda()" title="Reset Roda" style="background: none; border: none; cursor: pointer; font-size: 24px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
             🔄
         </button>
-        <button id="roketBtn" onclick="updateManual()" style="background: none; border: none; cursor: pointer; font-size: 30px; transition: 0.3s;">
+        <button id="roketBtn" onclick="updateManual()" title="Tarik Data Cloud" style="background: none; border: none; cursor: pointer; font-size: 30px; transition: 0.3s;">
             🚀
         </button>
     </div>
 </div>
 
-</body>
-        
-    </div>
-    <script>
-        // ======= KONFIGURASI =======
-        const CLOUD_URL = "https://script.google.com/macros/s/AKfycbyg91Ef_VQuCyp4oOpuwBMj6pp-ebbLXBnq9i8t-BA-puM9WSVV2NH44xRCw0ssW7XuzQ/exec"; 
-        const LINK_GFORM = "https://linktr.ee/CikguAnna_Najwa_Zatie";
-        // ===========================
+<script>
+    const CLOUD_URL = "https://script.google.com/macros/s/AKfycbyg91Ef_VQuCyp4oOpuwBMj6pp-ebbLXBnq9i8t-BA-puM9WSVV2NH44xRCw0ssW7XuzQ/exec"; 
+    const LINK_GFORM = "https://linktr.ee/CikguAnna_Najwa_Zatie";
 
-        const canvas = document.getElementById("wheel");
+    const canvas = document.getElementById("wheel");
     const ctx = canvas.getContext("2d");
     const txtArea = document.getElementById("listTajuk");
     const btnSpin = document.getElementById("spinBtn");
@@ -98,18 +84,16 @@
     let currentRotation = 0;
     let isSpinning = false;
 
-    // FUNGSI TARIK DATA DENGAN AUDIO & GETARAN
     async function tarikDataCloud() {
         const btnRoket = document.getElementById("roketBtn");
-        const whoosh_Audio = document.getElementById("whoosh_Sound");
+        const whooshAudio = document.getElementById("whooshSound");
 
         try {
-            // Main bunyi roket & mula getar
-            if (whoosh_Audio) {
-                whoosh_Audio.currentTime = 0;
-                whoosh_Audio.play().catch(e => console.log("Audio block"));
+            if (whooshAudio) {
+                whooshAudio.currentTime = 0;
+                whooshAudio.play().catch(e => console.log("Audio block"));
             }
-            btnRoket.classList.add("rocket-active");
+            if (btnRoket) btnRoket.classList.add("rocket-active");
 
             const res = await fetch(CLOUD_URL);
             const data = await res.json();
@@ -122,10 +106,9 @@
         } catch (e) { 
             console.log("Gagal tarik data");
         } finally {
-            // Berhenti getar selepas 0.5 saat
             setTimeout(() => {
-                btnRoket.classList.remove("rocket-active");
-            }, 500);
+                if (btnRoket) btnRoket.classList.remove("rocket-active");
+            }, 800);
         }
     }
 
@@ -182,10 +165,8 @@
         setTimeout(() => {
             isSpinning = false; btnSpin.disabled = false;
             if (spinAudio) spinAudio.pause();
-            
             const winAudio = document.getElementById("winSound");
             if (winAudio) winAudio.play();
-            
             showResult();
         }, 4000);
     }
@@ -211,10 +192,9 @@
     }
 
     window.onload = () => { 
-        // Load audio siap-siap
         document.getElementById("spinSound").load();
         document.getElementById("winSound").load();
-        document.getElementById("whoosh_Sound").load();
+        document.getElementById("whooshSound").load();
         drawWheel(); 
     };
 </script>
