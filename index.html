@@ -37,8 +37,9 @@
 </head>
 <body>
 
-    <audio id="spinSound" src="spin.mp3" preload="auto"></audio>
-    <audio id="winSound" src="win.mp3" preload="auto"></audio>
+<audio id="spinSound" src="spin.mp3" preload="auto"></audio>
+<audio id="winSound" src="win.mp3" preload="auto"></audio>
+<audio id="whooshSound" src="whoosh.mp3" preload="auto"></audio>
 
    <body style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #f4f7f6;">
 
@@ -97,11 +98,11 @@
 
        // FUNGSI BARU: Hanya panggil Cloud bila butang ditekan
       async function tarikDataCloud() {
-    // Cari butang roket
     const btnRoket = document.getElementById("roketBtn");
-    
+    const whooshAudio = document.getElementById("whooshSound"); // Ambil audio whoosh
+
     try {
-        // Mula bergetar dan membesar
+        if (whooshAudio) whooshAudio.play(); // Mainkan bunyi roket berlepas
         btnRoket.classList.add("rocket-active");
 
         const res = await fetch(CLOUD_URL);
@@ -115,13 +116,11 @@
     } catch (e) { 
         console.log("Gagal tarik data");
     } finally {
-        // Berhenti bergetar selepas data masuk
         setTimeout(() => {
             btnRoket.classList.remove("rocket-active");
-        }, 500); // Beri sikit masa ekstra untuk kesan visual
+        }, 500);
     }
 }
-
         function updateManual() {
             // Jika kotak teks kosong, dia akan cuba tarik dari Cloud dulu
             if (txtArea.value.trim() === "") {
