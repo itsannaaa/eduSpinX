@@ -15,7 +15,7 @@
         #spinBtn { padding: 15px 50px; font-size: 22px; font-weight: bold; cursor: pointer; background: #27ae60; color: white; border: none; border-radius: 50px; transition: 0.3s; width: 100%; max-width: 400px; margin: 20px 0; box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4); }
         #spinBtn:hover { background: #219150; transform: scale(1.05); }
         #spinBtn:disabled { background: #bdc3c7; }
-        .controls { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        .controls { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; position: relative; z-index: 10; }
         textarea { width: 92%; height: 60px; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-family: inherit; resize: none; margin-bottom: 5px; text-align: center; }
 
         @keyframes vibrate {
@@ -38,13 +38,12 @@
 
 <audio id="spinSound" preload="auto"><source src="spin.mp3" type="audio/mpeg"></audio>
 <audio id="winSound" preload="auto"><source src="win.mp3" type="audio/mpeg"></audio>
-<audio id="whooshSound" preload="auto"><source src="whoosh_.mp3" type="audio/mpeg"></audio>
 
-<div style="width: 100%; text-align: center; margin-top: 30px; margin-bottom: 40px;">
+<div style="width: 100%; text-align: center; margin-top: 10px; margin-bottom: 20px;">
     <h1 style="margin: 0; font-size: 35px; color: #2c3e50; letter-spacing: 1px;">
         🎡 <span style="color: #27ae60;">edu</span>SpinX
     </h1>
-    <p style="margin: 10px 0 0 0; font-size: 16px; color: #819091; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
+    <p style="margin: 5px 0 0 0; font-size: 16px; color: #819091; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">
         🚀 Revolusi Pembelajaran Digital
     </p>
 </div>
@@ -58,13 +57,13 @@
 
 <div class="controls">
     <p style="font-size: 13px; font-weight: bold; margin-bottom: 8px;">TOPIK</p>
-    <textarea id="listTajuk" placeholder="Contoh: Sejarah, Bm, Math"></textarea>
+    <textarea id="listTajuk" placeholder="Tarik data dari Cloud..."></textarea>
 
-    <div style="display: flex; justify-content: center; gap: 30px; margin-top: 10px;">
-        <button onclick="resetRoda()" title="Reset Roda" style="background: none; border: none; cursor: pointer; font-size: 24px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
+    <div style="display: flex; justify-content: center; gap: 40px; margin-top: 15px;">
+        <button onclick="resetRoda()" title="Reset Roda" style="background: none; border: none; cursor: pointer; font-size: 26px; transition: 0.2s;">
             🔄
         </button>
-        <button id="roketBtn" onclick="updateManual()" title="Tarik Data Cloud" style="background: none; border: none; cursor: pointer; font-size: 30px; transition: 0.3s;">
+        <button id="roketBtn" onclick="updateManual()" title="Tarik Data Cloud" style="background: none; border: none; cursor: pointer; font-size: 32px; transition: 0.3s;">
             🚀
         </button>
     </div>
@@ -86,13 +85,9 @@
 
     async function tarikDataCloud() {
         const btnRoket = document.getElementById("roketBtn");
-        const whooshAudio = document.getElementById("whooshSound");
 
         try {
-            if (whooshAudio) {
-                whooshAudio.currentTime = 0;
-                whooshAudio.play().catch(e => console.log("Audio block"));
-            }
+            // Hanya aktifkan animasi getar (Audio Whoosh telah dibuang)
             if (btnRoket) btnRoket.classList.add("rocket-active");
 
             const res = await fetch(CLOUD_URL);
@@ -105,6 +100,7 @@
             }
         } catch (e) { 
             console.log("Gagal tarik data");
+            Swal.fire("Ops!", "Gagal hubungi Cloud. Periksa internet.", "error");
         } finally {
             setTimeout(() => {
                 if (btnRoket) btnRoket.classList.remove("rocket-active");
@@ -194,7 +190,6 @@
     window.onload = () => { 
         document.getElementById("spinSound").load();
         document.getElementById("winSound").load();
-        document.getElementById("whooshSound").load();
         drawWheel(); 
     };
 </script>
