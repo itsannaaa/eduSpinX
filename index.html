@@ -200,7 +200,7 @@
         Swal.fire({
             title: 'TAHNIAH!',
             html: `Kumpulan anda mendapat:<br><b style="font-size:26px; color:#27ae60;">${pemenang}</b><br><br><div id="qrcode" style="display:flex; justify-content:center;"></div>`,
-            confirmButtonText: 'OK & PADAM NAMA',
+            confirmButtonText: 'OK',
             didOpen: () => { new QRCode(document.getElementById("qrcode"), { text: LINK_GFORM, width: 160, height: 160 }); }
         }).then((result) => {
             if (result.isConfirmed) {
