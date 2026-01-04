@@ -109,24 +109,22 @@
         }
 
        // FUNGSI SYNC CLOUD (VERSI AUTO-UPDATE RODA)
-        async function syncCloud() {
-            try {
-                const res = await fetch(CLOUD_URL);
-                const data = await res.json();
-                
-                // Jika ada data baru yang berbeza
-                if(data && JSON.stringify(data) !== JSON.stringify(tajuk)) {
-                    
-                    tajuk = data; 
-                    txtArea.value = tajuk.join(", ");
-                    
-                    // Roda berubah di sini tanpa keluar apa-apa teks status
-                    drawWheel(); 
-                }
-            } catch (e) {
-                // Biarkan kosong supaya tiada gangguan pada paparan
-            }
+       async function syncCloud() {
+    try {
+        const res = await fetch(CLOUD_URL);
+        const data = await res.json();
+        
+        // HANYA kemaskini jika kotak teks kosong atau data baru berbeza 
+        // DAN jangan ganggu jika jumlah nama di roda sudah berkurang (sedang dimainkan)
+        if(data && JSON.stringify(data) !== JSON.stringify(tajuk) && tajuk.length <= data.length) {
+            tajuk = data;
+            txtArea.value = tajuk.join(", ");
+            drawWheel();
         }
+    } catch (e) { 
+        console.log("Cloud offline"); 
+    }
+}
         function drawWheel() {
             const size = tajuk.length;
             const arc = (2 * Math.PI) / size;
