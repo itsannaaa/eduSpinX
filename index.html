@@ -29,11 +29,11 @@
             text-align: center;
         }
 
-        /* Wrapper Roda - Saiz dikecilkan ke 280px */
+        /* Wrapper Roda - Dibesarkan ke 350px */
         #wheel-wrapper { 
             position: relative; 
-            width: 280px; 
-            height: 280px; 
+            width: 350px; 
+            height: 350px; 
             margin: 20px 0;
             display: flex;
             justify-content: center;
@@ -41,28 +41,29 @@
 
         #pointer { 
             position: absolute; 
-            top: -10px; 
+            top: -12px; 
             left: 50%; 
             transform: translateX(-50%); 
             width: 0; 
             height: 0; 
-            border-left: 15px solid transparent; 
-            border-right: 15px solid transparent; 
-            border-top: 35px solid #000000; 
+            border-left: 18px solid transparent; 
+            border-right: 18px solid transparent; 
+            border-top: 38px solid #000000; 
             z-index: 100; 
+            pointer-events: none;
         }
 
-        /* Canvas diselaraskan dengan wrapper 280px */
+        /* Canvas diselaraskan dengan wrapper 350px */
         canvas { 
-            width: 280px !important; 
-            height: 280px !important; 
+            width: 350px !important; 
+            height: 350px !important; 
             border-radius: 50%; 
-            border: 8px solid #333; 
+            border: 10px solid #333; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
             background: white;
         }
 
-        /* Ditambah margin-top & margin-bottom untuk jarak */
+        /* Jarak butang diselaraskan */
         #spinBtn { 
             padding: 15px 0; 
             font-size: 20px; 
@@ -74,7 +75,7 @@
             border-radius: 50px; 
             transition: 0.3s; 
             width: 100%; 
-            margin: 30px 0 30px 0; /* Jarak atas bawah ditambah */
+            margin: 40px 0 35px 0; /* Jarak atas bawah ditambah untuk keselesaan visual */
             box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4); 
         }
 
@@ -143,7 +144,7 @@
 
         <div style="display: flex; justify-content: center; gap: 40px; margin-top: 15px;">
             <button onclick="resetRoda()" style="background: none; border: none; cursor: pointer; font-size: 26px;">🔄</button>
-            <button id="roketBtn" onclick="updateManual()" style="background: none; border: none; cursor: pointer; font-size: 30px;">🚀</button>
+            <button id="roketBtn" onclick="tarikDataCloud()" style="background: none; border: none; cursor: pointer; font-size: 30px;">🚀</button>
         </div>
     </div>
 </div>
@@ -190,6 +191,9 @@
             drawWheel();
         }
     }
+
+    // Fungsi tambahan supaya bila taip manual, roda terus update (Real-time)
+    txtArea.addEventListener('input', updateManual);
 
     function resetRoda() {
         tajuk = [];
